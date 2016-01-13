@@ -1,0 +1,46 @@
+/*=================================== Jasny Custom ======================================*/
+.navbar-default {
+    background-color: #141414;
+}
+
+.navbar-default, .navbar-toggle {
+    border: none;
+}
+
+.navbar-toggle {
+    display: block;
+    float: left;
+    margin-right: 0;
+    margin-left: 15px;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover  {
+    background-color: transparent;
+}
+
+.navbar-default .navbar-brand, .navmenu-brand, .navmenu-nav li a {
+    color: #ffffff !important;
+}
+
+.navbar-brand, .navmenu-brand {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.navmenu, .navbar-offcanvas {
+    width: 350px;
+}
+
+.navmenu-default {
+    background-color: #141414;
+    border-color: #1c1c1c;
+}
+
+.navmenu-nav .active a {
+    background-color: #2e2e2e !important;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ffffff;
+}
