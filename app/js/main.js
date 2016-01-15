@@ -76,37 +76,47 @@
     var ViewModel = function () {
         var self = this;
         var map;
-        var markersArray = [];
-        this.markerList = ko.observableArray();
+        this.markersArray = ko.observableArray();
+        this.markerObjects = [];
+        this.filterCriteria = ko.observable('');
 
-        Model.markerLocations.forEach(function (marker) {
-            self.markerList.push(new Marker(marker));
-        });
-
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 40.759011, lng: -73.984472},
-            zoom: 12
-        });
-
-        google.maps.event.addDomListener(window, "resize", function () {
-            var center = map.getCenter();
-            google.maps.event.trigger(map, "resize");
-            map.setCenter(center);
-        });
-
-        ko.utils.arrayForEach(self.markerList(), function (markerEntry) {
-            var marker = new google.maps.Marker({
-                id: markerEntry.id,
-                animation: google.maps.Animation.DROP,
-                position: markerEntry.coordinates,
-                map: map,
-                title: markerEntry.title,
-                placeIdUrl: markerEntry.placeIdUrl,
-                flickrUrl: markerEntry.flickrUrl
+        function init() {
+            Model.markerLocations.forEach(function (marker) {
+                self.markerObjects.push(new Marker(marker));
             });
 
-            markersArray.push(marker);
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 40.759011, lng: -73.984472},
+                zoom: 12
+            });
 
+            google.maps.event.addDomListener(window, "resize", function () {
+                var center = map.getCenter();
+                google.maps.event.trigger(map, "resize");
+                map.setCenter(center);
+            });
+
+            self.placeMarkers();
+        }
+
+        this.placeMarkers = function () {
+            this.markerObjects.forEach(function (markerEntry) {
+                var marker = new google.maps.Marker({
+                    id: markerEntry.id,
+                    animation: google.maps.Animation.DROP,
+                    position: markerEntry.coordinates,
+                    map: map,
+                    title: markerEntry.title,
+                    placeIdUrl: markerEntry.placeIdUrl,
+                    flickrUrl: markerEntry.flickrUrl
+                });
+
+                self.markersArray.push(marker);
+            });
+        };
+        init();
+
+        ko.utils.arrayForEach(this.markersArray(), function (marker) {
             marker.addListener('click', toggleBounce);
             function toggleBounce() {
                 if (marker.getAnimation() !== null) {
@@ -133,44 +143,58 @@
         self.selectMarker = function (marker) {
             highlightListElement(marker);
 
-            for (var i = 0; i < markersArray.length; i++) {
-                var placeid;
-                if (markersArray[i].id == marker.id) {
-                    markersArray[i].setAnimation(google.maps.Animation.BOUNCE);
+            var placeid;
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function () {
+                marker.setAnimation(null);
+            }, 2000);
 
-                    (function (elem) {
-                        setTimeout(function () {
-                            markersArray[elem].setAnimation(null);
-                        }, 2000);
-                    })(i);
+            //getPlaceId(marker.placeIdUrl);
+            //var flickrUrl = marker.flickrUrl;
+            //flickrUrl = flickrUrl.replace("[placeid]", placeid);
+            //console.log(flickrUrl);
 
-                    getPlaceId(markersArray[i].placeIdUrl)
-                    var flickrUrl = markersArray[i].flickrUrl;
-                    flickrUrl = flickrUrl.replace("[placeid]", placeid);
-                    console.log(flickrUrl);
+            //var infoContent = getFlickrData(flickrUrl);
 
-                    var infoContent = getFlickrData(flickrUrl);
+            var infoWindow = new google.maps.InfoWindow({
+                content: marker.title,
+                maxWidth: 600
+            });
 
-                    var infoWindow = new google.maps.InfoWindow({
-                        content: marker.title,
-                        maxWidth: 600
-                    });
-
-                    infoWindow.open(map, markersArray[i]);
-                }
-            }
-
+            infoWindow.open(map, marker);
         };
 
         var highlightListElement = function (marker) {
             var listElements = document.getElementsByClassName("place");
             var listElement = document.getElementById(marker.id);
 
-            for (var i = 0; i < listElements.length; i++) {
-                listElements[i].className = "place";
+            listElement.className += " active";
+        };
+
+        this.filter = function () {
+            console.log(this.filterCriteria());
+            var visibleMarkers = [];
+
+            if (!self.filterCriteria() || self.filterCriteria() == '') {
+                ko.utils.arrayForEach(self.markersArray(), function (marker) {
+                    var listElement = document.getElementById(marker.id);
+                    marker.setVisible(true);
+                    listElement.className = "place";
+                });
             }
 
-            listElement.className += " active";
+            ko.utils.arrayForEach(self.markersArray(), function (marker) {
+                var listElement = document.getElementById(marker.id);
+                var index = marker.title.toLowerCase().indexOf(self.filterCriteria().toLowerCase());
+
+                if (index < 0) {
+                    listElement.className = "place hide";
+                    marker.setVisible(false);
+                } else {
+                    listElement.className = "place";
+                    marker.setVisible(true);
+                }
+            });
         };
 
         var getPlaceId = function (url) {
@@ -199,5 +223,6 @@
         getFlickrData();
     };
 
-    ko.applyBindings(new ViewModel());
+    var viewModel = new ViewModel();
+    ko.applyBindings(viewModel);
 })();

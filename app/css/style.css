@@ -76,6 +76,17 @@ body {
     background-color: #141414;
 }
 
+.hide {
+    display: none;
+}
+
+#map-error {
+    position: absolute;
+    left: 30%;
+    width: 50%;
+    top: 10%;
+}
+
 /*=================================== Off Canvas ======================================*/
 #myNavmenu {
     margin-top: 50px ;

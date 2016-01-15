@@ -18,12 +18,12 @@
     <a class="navmenu-brand off-canvas" href="#">New York City</a>
 
     <div class="filter-box">
-        <input type="text" class="filter col-xs-offset-1 col-xs-8"/>
-        <button type="button" class="filter-icon-holder col-xs-2"><span class="glyphicon glyphicon-filter filter-icon" aria-hidden="true"></span></button>
+        <input type="text" class="filter col-xs-offset-1 col-xs-8" data-bind="textInput: filterCriteria, event: {keyup: filter}" placeholder="Filter"/>
+        <button type="button" class="filter-icon-holder col-xs-2" data-bind="click: filter"><span class="glyphicon glyphicon-filter filter-icon" aria-hidden="true"></span></button>
     </div>
 
     <div class="place-list">
-        <ul class="places" data-bind="foreach: markerList">
+        <ul class="places" data-bind="foreach: markersArray">
             <li class="place" data-bind="text: title, click: $parent.selectMarker, attr: {id: id}"></li>
         </ul>
     </div>
@@ -37,13 +37,28 @@
     </button>
     <a class="navbar-brand" href="#">Neighborhood Map</a>
 </div>
-
-
 <div id="map"></div>
+
+<div id="map-error" class="hide" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+    <span>Aww Snap! Google Maps Failed to load</span>
+</div>
+
 <script src="vendor/jquery/dist/jquery.min.js"></script>
 <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="vendor/jasny-bootstrap/dist/js/jasny-bootstrap.min.js"></script>
-<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBpd-K_P4EShPu5odtjRtybExwUMWBU6hY&signed_in=true'></script>
+<script>
+    var mapLoadError = function() {
+        var errorMsg = document.getElementById("map-error");
+        errorMsg.className = "alert alert-danger alert-dismissible";
+
+        setTimeout(function () {
+            errorMsg.className = "hide";
+        }, 4000);
+    }
+</script>
+<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBpd-K_P4EShPu5odtjRtybExwUMWBU6hY&signed_in=true' onerror='mapLoadError()'></script>
 <script src="js/main.js"></script>
 </body>
 </html>
