@@ -72,13 +72,18 @@ html, body {
     }
 }
 
-.hamburger {
-    
+body {
+    background-color: #141414;
 }
 
 /*=================================== Off Canvas ======================================*/
+#myNavmenu {
+    margin-top: 50px ;
+}
+
 .off-canvas {
     margin-bottom: 20px;
+    font-size: 1.2em;
 }
 
 .filter-box {
