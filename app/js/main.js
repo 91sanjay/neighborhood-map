@@ -80,7 +80,7 @@
         this.markerObjects = [];
         this.filterCriteria = ko.observable('');
 
-        function init() {
+        var init = function () {
             Model.markerLocations.forEach(function (marker) {
                 self.markerObjects.push(new Marker(marker));
             });
@@ -97,7 +97,8 @@
             });
 
             self.placeMarkers();
-        }
+            console.log(infoWindowContent);
+        };
 
         this.placeMarkers = function () {
             this.markerObjects.forEach(function (markerEntry) {
@@ -117,7 +118,7 @@
         init();
 
         ko.utils.arrayForEach(this.markersArray(), function (marker) {
-            google.maps.event.addListener(marker, 'click', function() {
+            google.maps.event.addListener(marker, 'click', function () {
                 map.panTo(marker.getPosition());
             });
 
@@ -138,18 +139,18 @@
                 maxWidth: 600
             });
 
-            google.maps.event.addListener(marker,'click', openInfoWindow);
+            google.maps.event.addListener(marker, 'click', openInfoWindow);
             function openInfoWindow() {
                 infoWindow.open(map, marker);
                 highlightListElement(marker);
             }
 
-            google.maps.event.addListener(infoWindow, "closeclick", function() {
+            google.maps.event.addListener(infoWindow, "closeclick", function () {
                 deselectListElement(marker);
             });
         });
 
-        self.selectMarker = function (marker) {
+        this.selectMarker = function (marker) {
             highlightListElement(marker);
 
             marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -164,21 +165,21 @@
 
             infoWindow.open(map, marker);
 
-            google.maps.event.addListener(infoWindow, "closeclick", function() {
+            google.maps.event.addListener(infoWindow, "closeclick", function () {
                 deselectListElement(marker);
             });
 
             getPlaceId(marker.placeIdUrl)
-                .done(function(response) {
+                .done(function (response) {
                     console.log("enter");
                     var flickrUrl;
                     if (response.stat == "fail") {
                         console.log("API returned error while retrieving palce if");
                         flickrUrl = marker.flickrUrl.replace("[placeid]", '');
                     } else {
-                        flickrUrl = marker.flickrUrl.replace("[placeid]", "&place_id="+response.places.place[0].place_id);
+                        flickrUrl = marker.flickrUrl.replace("[placeid]", "&place_id=" + response.places.place[0].place_id);
                         getFlickrPhotos(flickrUrl)
-                            .done(function(photosHolder) {
+                            .done(function (photosHolder) {
                                 if (photosHolder.stat == "fail") {
                                     console.log("API returned error while retrieving photos");
                                 } else {
@@ -186,7 +187,7 @@
                                 }
                             });
                     }
-                }).fail(function(){
+                }).fail(function () {
                     console.log("Failed");
                 });
         };
@@ -197,7 +198,7 @@
             listElement.className += " active";
         };
 
-        var deselectListElement = function(marker) {
+        var deselectListElement = function (marker) {
             var listElement = document.getElementById(marker.id);
 
             listElement.className = "place";
@@ -206,8 +207,8 @@
         var getPlaceId = function (placeUrl) {
             var deferred = $.Deferred();
 
-            $.getJSON(placeUrl).then(function(response) {
-                if(!response) {
+            $.getJSON(placeUrl).then(function (response) {
+                if (!response) {
                     deferred.reject(response);
                 }
                 deferred.resolve(response);
@@ -215,12 +216,12 @@
             return deferred.promise();
         };
 
-        var getFlickrPhotos = function(flickrUrl) {
+        var getFlickrPhotos = function (flickrUrl) {
             var deferred = $.Deferred();
 
             $.getJSON(flickrUrl)
-                .then(function(response) {
-                    if(!response) {
+                .then(function (response) {
+                    if (!response) {
                         deferred.reject(response);
                     }
 
@@ -230,8 +231,12 @@
             return deferred.promise();
         };
 
+        var getInitialInfoContent = function () {
+            var content = '';
+            var header = ""
+        };
+
         this.filter = function () {
-            console.log(this.filterCriteria());
             var visibleMarkers = [];
 
             if (!self.filterCriteria() || self.filterCriteria() == '') {

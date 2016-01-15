@@ -157,3 +157,22 @@ html, body {
     width: 50%;
     top: 10%;
 }
+
+
+.gallery {
+    padding: 20px;
+}
+
+.images {
+    margin: 0 auto;
+}
+
+.images a {
+    padding: 5px 5px;
+}
+
+.images img {
+    margin: 10px 0;
+    width: 200px;
+    height: 150px;
+}
