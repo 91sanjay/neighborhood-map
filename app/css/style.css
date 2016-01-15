@@ -1,3 +1,9 @@
+/*=================================== Reset Rules ======================================*/
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
 /*=================================== Jasny Custom ======================================*/
 .navbar-default {
     background-color: #141414;
@@ -29,7 +35,7 @@
 }
 
 .navmenu, .navbar-offcanvas {
-    width: 350px;
+    width: 300px;
 }
 
 .navmenu-default {
@@ -43,4 +49,84 @@
 
 .navbar-default .navbar-toggle .icon-bar {
     background-color: #ffffff;
+}
+
+.hamburger {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    body, a, h1, h2, h3, h4 {
+        font-size: 14px !important;
+    }
+
+    body {
+        transition:all .2s ease !important;
+        -o-transition:all .2s ease !important;
+        -moz-transition:all .2s ease !important;
+        -webkit-transition:all .2s ease !important;
+    }
+
+    .hamburger {
+        display: block;
+    }
+}
+
+.hamburger {
+    
+}
+
+/*=================================== Off Canvas ======================================*/
+.off-canvas {
+    margin-bottom: 20px;
+}
+
+.filter-box {
+    width: 100%;
+    margin-bottom: 90px;
+}
+
+.filter {
+    height: 40px;
+    margin-left: 5%;
+    border: none;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+}
+
+.filter-icon-holder {
+    height: 40px;
+    background-color: #1fbad6;
+    border: none;
+    display: inline-block;
+}
+
+.filter-icon {
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+.place-list {
+    margin: 20px 0;
+}
+
+.places {
+    list-style-type: none;
+    padding: 0;
+}
+
+.place {
+    margin: 10px 0 10px 0;
+    padding: 15px 0 15px 15px;
+    color: #ffffff;
+}
+
+.active {
+    background-color: #262626;
+}
+
+/*=================================== Page Content ======================================*/
+#map {
+    width: 100%;
+    height: 100%;
 }
