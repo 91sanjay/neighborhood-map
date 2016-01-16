@@ -349,6 +349,9 @@ var ViewModel = function () {
         });
     };
 
+    /*
+     * @description Appends a Bootstrap alert div with an appropriate message to the body of the document
+     */
     var logError = function (alertDiv, failureMsg) {
         console.log("called");
         console.log(alertDiv);
