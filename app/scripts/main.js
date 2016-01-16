@@ -214,7 +214,11 @@ var ViewModel = function () {
         var list = document.getElementsByClassName("place");
 
         for(var i=0;i<list.length;i++) {
-            list[i].className = "place";
+            if (list[i].classList.contains("hide")) {
+                list[i].className = "place hide";
+            } else {
+                list[i].className = "place";
+            }
         }
 
         listElement.className += " active";
