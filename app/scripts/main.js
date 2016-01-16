@@ -20,7 +20,7 @@ var Model = {
         },
         {
             id: 2,
-            title: "Times Sqaure",
+            title: "Times Square",
             coordinates: {
                 lat: 40.759011,
                 lng: -73.984472
@@ -28,7 +28,7 @@ var Model = {
         },
         {
             id: 3,
-            title: "Madison Sqaure Garden",
+            title: "Madison Square Garden",
             coordinates: {
                 lat: 40.750506,
                 lng: -73.993394
@@ -78,6 +78,7 @@ var ViewModel = function () {
     this.markersArray = ko.observableArray();
     this.markerObjects = [];
     this.filterCriteria = ko.observable('');
+    this.infoWindows = ko.observableArray();
 
     /*
      * @description Initialize Google Map and set Center at New York City. Place Markers at the desired locations
@@ -149,7 +150,7 @@ var ViewModel = function () {
             } else {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 setTimeout(function () {
-                    marker.setAnimation(null)
+                    marker.setAnimation(null);
                 }, 2000);
             }
         }
@@ -163,7 +164,9 @@ var ViewModel = function () {
 
         google.maps.event.addListener(marker, 'click', openInfoWindow);
         function openInfoWindow() {
+            closeAllInfoWindows(self.infoWindows());
             infoWindow.open(map, marker);
+            self.infoWindows.push(infoWindow);
             highlightListElement(marker);
             setInfoContent(marker, infoWindow);
         }
@@ -179,6 +182,7 @@ var ViewModel = function () {
      */
     this.selectMarker = function (marker) {
         var initialContent = getInitialInfoContent(marker);
+        closeAllInfoWindows(self.infoWindows());
         var infoWindow = new google.maps.InfoWindow({
             content: initialContent,
             maxWidth: 300
@@ -187,7 +191,6 @@ var ViewModel = function () {
         highlightListElement(marker);
         map.panTo(marker.getPosition());
         map.panBy(0, -100);
-
 
         marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function () {
@@ -199,6 +202,7 @@ var ViewModel = function () {
         });
 
         infoWindow.open(map, marker);
+        self.infoWindows.push(infoWindow);
         setInfoContent(marker, infoWindow);
     };
 
@@ -207,6 +211,11 @@ var ViewModel = function () {
      */
     var highlightListElement = function (marker) {
         var listElement = document.getElementById(marker.id);
+        var list = document.getElementsByClassName("place");
+
+        for(var i=0;i<list.length;i++) {
+            list[i].className = "place";
+        }
 
         listElement.className += " active";
     };
@@ -220,6 +229,12 @@ var ViewModel = function () {
         listElement.className = "place";
     };
 
+    var closeAllInfoWindows = function (infoWindows) {
+        ko.utils.arrayForEach(infoWindows, function(infoWindow){
+            infoWindow.close();
+        });
+    };
+
     /*
      * @description This function calls AJAX functions to the Flickr API to obtain the photos for a location
      * It first uses the (lat,lng) and the title of the marker to fetch a placeId and then queries the API
@@ -229,7 +244,6 @@ var ViewModel = function () {
     var setInfoContent = function (marker, infoWindow) {
         getPlaceId(marker.placeIdUrl)
             .done(function (response) {
-                console.log("enter" + response);
                 var flickrUrl;
 
                 if (response.stat == "fail") {
@@ -241,11 +255,8 @@ var ViewModel = function () {
                         .done(function (photosHolder) {
                             if (photosHolder.stat == "fail") {
                                 logError(flickrFailAlert, flickrFailMsg);
-                                console.log("API returned error while retrieving photos");
                             } else {
-                                console.log(photosHolder.photos.photo.length);
                                 var infoContent = getInfoContent(marker.title, photosHolder.photos.photo);
-                                console.log(infoContent);
                                 infoWindow.setContent(infoContent);
                             }
                         }).fail(function () {
