@@ -139,6 +139,10 @@ html, body {
     #myNavmenu {
         margin-top: 0;
     }
+
+    .offcanvas-small {
+        left: -350px;
+    }
 }
 
 /*=================================== Page Content ======================================*/
@@ -151,12 +155,14 @@ html, body {
     display: none;
 }
 
-#map-error {
+#map-error, #place-error, #flickr-error {
     position: absolute;
     left: 30%;
     width: 50%;
     top: 10%;
+    z-index: 4000;
 }
+
 
 /*=================================== Info Window ======================================*/
 .infoWindow {
