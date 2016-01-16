@@ -338,7 +338,7 @@ var ViewModel = function () {
     this.filter = function () {
         var visibleMarkers = [];
 
-        if (!self.filterCriteria() || self.filterCriteria() == '') {
+        if (!self.filterCriteria() || self.filterCriteria() === '') {
             ko.utils.arrayForEach(self.markersArray(), function (marker) {
                 var listElement = document.getElementById(marker.id);
                 marker.setVisible(true);
@@ -364,8 +364,6 @@ var ViewModel = function () {
      * @description Appends a Bootstrap alert div with an appropriate message to the body of the document
      */
     var logError = function (alertDiv, failureMsg) {
-        console.log("called");
-        console.log(alertDiv);
         document.body.insertAdjacentHTML('afterbegin', alertDiv.replace("[error]", failureMsg));
     };
 };
