@@ -141,7 +141,7 @@
 
             google.maps.event.addListener(marker, 'click', function () {
                 map.panTo(marker.getPosition());
-                map.panBy(0, -80);
+                map.panBy(0, -100);
             });
 
             marker.addListener('click', toggleBounce);
@@ -188,7 +188,7 @@
 
             highlightListElement(marker);
             map.panTo(marker.getPosition());
-            map.panBy(0, (0 - window.innerHeight / 2));
+            map.panBy(0, -100);
 
 
             marker.setAnimation(google.maps.Animation.BOUNCE);

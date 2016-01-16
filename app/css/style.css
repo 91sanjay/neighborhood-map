@@ -23,7 +23,7 @@ html, body {
     background-color: transparent;
 }
 
-.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover  {
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
     background-color: transparent;
 }
 
@@ -66,10 +66,10 @@ html, body {
     }
 
     body {
-        transition:all .2s ease !important;
-        -o-transition:all .2s ease !important;
-        -moz-transition:all .2s ease !important;
-        -webkit-transition:all .2s ease !important;
+        transition: all .2s ease !important;
+        -o-transition: all .2s ease !important;
+        -moz-transition: all .2s ease !important;
+        -webkit-transition: all .2s ease !important;
     }
 
     .hamburger {
