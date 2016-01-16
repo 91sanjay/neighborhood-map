@@ -10,4 +10,4 @@ to view the site on your browser. Before that please make sure you have installe
 4. Use the search bar to filter the locations
 5. This site is fully responsive
 
-Site - http://91sanjay.github.io/neighborhood-map/index.html
+Site - http://91sanjay.github.io/neighborhood-map/dist/index.html
