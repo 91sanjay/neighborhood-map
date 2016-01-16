@@ -367,7 +367,7 @@ var ViewModel = function () {
         console.log("called");
         console.log(alertDiv);
         document.body.insertAdjacentHTML('afterbegin', alertDiv.replace("[error]", failureMsg));
-    }
+    };
 };
 
 function init() {
