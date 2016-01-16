@@ -9,4 +9,4 @@ to view the site on your browser. Before that please make sure you have installe
 3. Click on the marker/list item to view the details of the location
 4. Use the search bar to filter the locations
 
-http://91sanjay.github.io/neighborhood-map/index.html
+Site - http://91sanjay.github.io/neighborhood-map/index.html
