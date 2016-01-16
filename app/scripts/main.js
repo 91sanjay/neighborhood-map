@@ -336,8 +336,6 @@ var ViewModel = function () {
      * to show or hide based on the filtered list
      */
     this.filter = function () {
-        var visibleMarkers = [];
-
         if (!self.filterCriteria() || self.filterCriteria() === '') {
             ko.utils.arrayForEach(self.markersArray(), function (marker) {
                 var listElement = document.getElementById(marker.id);
