@@ -60,7 +60,7 @@ var Marker = function (data) {
     this.id = data.id;
     this.title = data.title;
     this.coordinates = data.coordinates;
-    this.placeIdUrl = "https://api.flick.com/services/rest/?method=flickr.places.findByLatLon" +
+    this.placeIdUrl = "https://api.flickr.com/services/rest/?method=flickr.places.findByLatLon" +
         "&api_key=360da6373d34f0076c66dedc9bf6270d&lat=" + data.coordinates.lat + "&lon=" + data.coordinates.lng +
         "&format=json&nojsoncallback=1";
     this.flickrUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
