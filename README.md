@@ -8,5 +8,6 @@ This project was completed as part of the Front End Web Developer Nanodegree at 
 to view the site on your browser. Before that please make sure you have installed nodejs(npm) and run ```npm install``` and ```bower install```
 3. Click on the marker/list item to view the details of the location
 4. Use the search bar to filter the locations
+5. This site is fully responsive
 
 Site - http://91sanjay.github.io/neighborhood-map/index.html
