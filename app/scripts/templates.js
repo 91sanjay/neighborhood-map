@@ -2,7 +2,7 @@
 
 var infoWindowContent = '<div class="infoWindow"><div class="infoWindowHeader"><h4>[title]</h4></div>[gallery]</div>';
 
-var gallery = '<div class="gallery"><div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">' +
+var galleryTemplate = '<div class="gallery"><div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">' +
     '<div class="slides"></div><h3 class="title"></h3><a class="prev">‹</a><a class="next">›</a><a class="close">×</a>' +
     '<a class="play-pause"></a><ol class="indicator"></ol><div class="modal fade"><div class="modal-dialog">' +
     '<div class="modal-content"><div class="modal-header"><button type="button" class="close" aria-hidden="true">' +
@@ -11,6 +11,8 @@ var gallery = '<div class="gallery"><div id="blueimp-gallery" class="blueimp-gal
     'Previous</button><button type="button" class="btn btn-primary next">Next<i class="glyphicon glyphicon-chevron-right">' +
     '</i></button></div></div></div></div></div><div id="links" class="images"><a href="[img-1-a]" data-gallery>' +
     '<img src="[img-1-src]"></a><a href="[img-2-a]" data-gallery><img src="[img-2-src]"></a>' +
-    '<a href="[img-3-a]" data-gallery><img src="[img-3-src]"></a>' +
-    '<a href="[img-4-a]" data-gallery><img src="[img-4-src]"></a><a href="[img-5-a]" data-gallery>' +
-    '<img src="[img-5-src]"></a><a href="[img-6-a]" data-gallery><img src="[img-6-a]"></a></div>';
+    '<a href="[img-3-a]" data-gallery><img src="[img-3-src]"></a></div>';
+
+var ajaxLoader = '<div class="ajax-loader"></div>';
+
+var imgUrl = 'https://farm[farmno].staticflickr.com/[server]/[id]_[secret].jpg';

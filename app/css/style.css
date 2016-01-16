@@ -158,6 +158,16 @@ html, body {
     top: 10%;
 }
 
+/*=================================== Info Window ======================================*/
+.infoWindow {
+    max-height: 200px;
+}
+
+.infoWindowHeader h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2em;
+    padding-left: 10px;
+}
 
 .gallery {
     padding: 20px;
@@ -173,6 +183,14 @@ html, body {
 
 .images img {
     margin: 10px 0;
-    width: 200px;
-    height: 150px;
+    width: 250px;
+    height: 200px;
+}
+
+.ajax-loader {
+    width: 100%;
+    height: 20px;
+    background-image: url("../img/ajax-loader.gif");
+    background-repeat: no-repeat;
+    background-position: center;
 }

@@ -117,9 +117,16 @@
         };
         init();
 
+        var getInitialInfoContent = function (marker) {
+            return infoWindowContent.replace("[title]", marker.title).replace("[gallery]", ajaxLoader);
+        };
+
         ko.utils.arrayForEach(this.markersArray(), function (marker) {
+            var initialContent;
+
             google.maps.event.addListener(marker, 'click', function () {
                 map.panTo(marker.getPosition());
+                map.panBy(0, -80);
             });
 
             marker.addListener('click', toggleBounce);
@@ -134,15 +141,18 @@
                 }
             }
 
+            initialContent = getInitialInfoContent(marker);
+
             var infoWindow = new google.maps.InfoWindow({
-                content: marker.title,
-                maxWidth: 600
+                content: initialContent,
+                maxWidth: 300
             });
 
             google.maps.event.addListener(marker, 'click', openInfoWindow);
             function openInfoWindow() {
                 infoWindow.open(map, marker);
                 highlightListElement(marker);
+                setInfoContent(marker, infoWindow);
             }
 
             google.maps.event.addListener(infoWindow, "closeclick", function () {
@@ -151,45 +161,28 @@
         });
 
         this.selectMarker = function (marker) {
+            var initialContent = getInitialInfoContent(marker);
+            var infoWindow = new google.maps.InfoWindow({
+                content: initialContent,
+                maxWidth: 300
+            });
+
             highlightListElement(marker);
+            map.panTo(marker.getPosition());
+            map.panBy(0, -80);
+
 
             marker.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function () {
                 marker.setAnimation(null);
             }, 2000);
 
-            var infoWindow = new google.maps.InfoWindow({
-                content: marker.title,
-                maxWidth: 600
-            });
-
-            infoWindow.open(map, marker);
-
             google.maps.event.addListener(infoWindow, "closeclick", function () {
                 deselectListElement(marker);
             });
 
-            getPlaceId(marker.placeIdUrl)
-                .done(function (response) {
-                    console.log("enter");
-                    var flickrUrl;
-                    if (response.stat == "fail") {
-                        console.log("API returned error while retrieving palce if");
-                        flickrUrl = marker.flickrUrl.replace("[placeid]", '');
-                    } else {
-                        flickrUrl = marker.flickrUrl.replace("[placeid]", "&place_id=" + response.places.place[0].place_id);
-                        getFlickrPhotos(flickrUrl)
-                            .done(function (photosHolder) {
-                                if (photosHolder.stat == "fail") {
-                                    console.log("API returned error while retrieving photos");
-                                } else {
-                                    console.log(photosHolder.photos.photo.length);
-                                }
-                            });
-                    }
-                }).fail(function () {
-                    console.log("Failed");
-                });
+            infoWindow.open(map, marker);
+            setInfoContent(marker, infoWindow);
         };
 
         var highlightListElement = function (marker) {
@@ -202,6 +195,34 @@
             var listElement = document.getElementById(marker.id);
 
             listElement.className = "place";
+        };
+
+        var setInfoContent = function(marker, infoWindow) {
+            getPlaceId(marker.placeIdUrl)
+                .done(function (response) {
+                    console.log("enter");
+                    var flickrUrl;
+
+                    if (response.stat == "fail") {
+                        console.log("API returned error while retrieving palce if");
+                        flickrUrl = marker.flickrUrl.replace("[placeid]", '');
+                    } else {
+                        flickrUrl = marker.flickrUrl.replace("[placeid]", "&place_id=" + response.places.place[0].place_id);
+                        getFlickrPhotos(flickrUrl)
+                            .done(function (photosHolder) {
+                                if (photosHolder.stat == "fail") {
+                                    console.log("API returned error while retrieving photos");
+                                } else {
+                                    console.log(photosHolder.photos.photo.length);
+                                    var infoContent = getInfoContent(marker.title, photosHolder.photos.photo);
+                                    console.log(infoContent);
+                                    infoWindow.setContent(infoContent);
+                                }
+                            });
+                    }
+                }).fail(function () {
+                    console.log("Failed");
+                });
         };
 
         var getPlaceId = function (placeUrl) {
@@ -231,9 +252,22 @@
             return deferred.promise();
         };
 
-        var getInitialInfoContent = function () {
-            var content = '';
-            var header = ""
+        var getInfoContent = function(title, photos) {
+            var content = infoWindowContent.replace("[title]", title);
+            var images = [];
+
+            for(var i=0;i<3;i++) {
+                var photo = photos[i];
+                var img = imgUrl.replace("[farmno]", photo.farm).replace("[server]", photo.server).replace("[id]", photo.id)
+                    .replace("[secret]", photo.secret);
+                images.push(img);
+            }
+
+            var gallery = galleryTemplate.replace("[img-1-a]", images[0]).replace("[img-1-src]", images[0])
+                .replace("[img-2-a]", images[1]).replace("[img-2-src]", images[1])
+                .replace("[img-3-a]", images[2]).replace("[img-3-src]", images[2]);
+
+            return content.replace("[gallery]", gallery);
         };
 
         this.filter = function () {
