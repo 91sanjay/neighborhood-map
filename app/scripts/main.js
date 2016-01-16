@@ -80,6 +80,9 @@
         this.markerObjects = [];
         this.filterCriteria = ko.observable('');
 
+        /*
+         * @description Initialize Google Map and set Center at New York City. Place Markers at the desired locations
+         */
         var init = function () {
             Model.markerLocations.forEach(function (marker) {
                 self.markerObjects.push(new Marker(marker));
@@ -100,6 +103,10 @@
             console.log(infoWindowContent);
         };
 
+        /*
+         * @description Place Markers at the desired locations. Add the marker to an observable array for
+         * future reference
+         */
         this.placeMarkers = function () {
             this.markerObjects.forEach(function (markerEntry) {
                 var marker = new google.maps.Marker({
@@ -117,10 +124,18 @@
         };
         init();
 
+        /*
+         * @description Get initial content with title and loading gif
+         */
         var getInitialInfoContent = function (marker) {
             return infoWindowContent.replace("[title]", marker.title).replace("[gallery]", ajaxLoader);
         };
 
+        /*
+         * @description Add click handlers on markers. The markers are expected to bounce and an info window
+         * to show the data from Flickr will pop up. Also handle 'closeclick' for info window to keep the
+         * user experience smooth
+         */
         ko.utils.arrayForEach(this.markersArray(), function (marker) {
             var initialContent;
 
@@ -160,6 +175,10 @@
             });
         });
 
+        /*
+         * @description This function is mainly used to link the marker to the list item that was selected.
+         * The behavior is similar to that of a marker click.
+         */
         this.selectMarker = function (marker) {
             var initialContent = getInitialInfoContent(marker);
             var infoWindow = new google.maps.InfoWindow({
@@ -169,7 +188,7 @@
 
             highlightListElement(marker);
             map.panTo(marker.getPosition());
-            map.panBy(0, -80);
+            map.panBy(0, (0 - window.innerHeight / 2));
 
 
             marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -185,19 +204,31 @@
             setInfoContent(marker, infoWindow);
         };
 
+        /*
+         * @description Add active class to list item on click
+         */
         var highlightListElement = function (marker) {
             var listElement = document.getElementById(marker.id);
 
             listElement.className += " active";
         };
 
+        /*
+         * @description Remove active class when the info window is closed
+         */
         var deselectListElement = function (marker) {
             var listElement = document.getElementById(marker.id);
 
             listElement.className = "place";
         };
 
-        var setInfoContent = function(marker, infoWindow) {
+        /*
+         * @description This function calls AJAX functions to the Flickr API to obtain the photos for a location
+         * It first uses the (lat,lng) and the title of the marker to fetch a placeId and then queries the API
+         * for the photos. It then calls a function that build the html to be displayed in the infowindow and
+         * sets the infowindow's content to reflect the same
+         */
+        var setInfoContent = function (marker, infoWindow) {
             getPlaceId(marker.placeIdUrl)
                 .done(function (response) {
                     console.log("enter");
@@ -225,6 +256,9 @@
                 });
         };
 
+        /*
+         * @description AJAX call to fetch place_id
+         */
         var getPlaceId = function (placeUrl) {
             var deferred = $.Deferred();
 
@@ -237,6 +271,10 @@
             return deferred.promise();
         };
 
+        /*
+         * @description AJAX call to fetch photos
+         * @param {string} flickrUrl - API endpoint for fetching photos
+         */
         var getFlickrPhotos = function (flickrUrl) {
             var deferred = $.Deferred();
 
@@ -252,11 +290,16 @@
             return deferred.promise();
         };
 
-        var getInfoContent = function(title, photos) {
+        /*
+         * @description Function to build the html that goes inside the info window
+         * @param {string} title - Name of the location
+         * @param {array} photos - Photos array from AJAX call
+         */
+        var getInfoContent = function (title, photos) {
             var content = infoWindowContent.replace("[title]", title);
             var images = [];
 
-            for(var i=0;i<3;i++) {
+            for (var i = 0; i < 3; i++) {
                 var photo = photos[i];
                 var img = imgUrl.replace("[farmno]", photo.farm).replace("[server]", photo.server).replace("[id]", photo.id)
                     .replace("[secret]", photo.secret);
@@ -270,6 +313,11 @@
             return content.replace("[gallery]", gallery);
         };
 
+        /*
+         * @description This function is used to filter the locaiton list based on the text obtained from the
+         * input box. This function is fired on keyup event. It then sets the visible property of the marker
+         * to show or hide based on the filtered list
+         */
         this.filter = function () {
             var visibleMarkers = [];
 
